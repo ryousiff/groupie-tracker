@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groupie Tracker</title>
+    <link rel="stylesheet" type="text/css" href="/groupie.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <header>
+        <h1>Groupie Tracker</h1>
+    </header>
+    <div class="searchBar">
+        <form action="/search">
+            <input list="searchBar" type="text" placeholder="Search.." name="search">
+            <button type="submit"><i class="fa fa-search"></i></button>
+            <datalist id="searchBar">
+                {{range .}}
+                    <option value="{{.Name}}">{{.Name}} - artist/band</option>
+                    <!-- Display each member separately -->
+                    {{range .Members}}
+                        <option value="{{.}}">{{.}} - Member</option>
+                    {{end}}
+                    <!-- Split Locations into a slice and range over it -->
+                    {{range split .Locations ", "}}
+                        <option value="{{.}}">{{.}} - Location</option>
+                    {{end}}
+                    <option value="{{.FirstAlbum}}">{{.FirstAlbum}} - First Album</option>
+                    <option value="{{.CreationDate}}">{{.CreationDate}} - Creation Date</option>
+                {{end}}
+            </datalist>
+        </form>
+    </div>
+    <main>
+        <section id="artistList" class="artist-card">
+            {{range .}}
+                <div>
+                    <div class="bord">
+                        <h2>{{.Name}}</h2>
+                        <a href="/info?id={{.Id}}"><img src="{{.Image}}" alt="{{.Name}}" class="i"></a>
+                    </div>
+                </div>
+            {{end}}
+        </section>
+    </main>
+    <footer>
+        <p>&copy; Groupie Tracker</p>
+    </footer>
+</body>
+</html>
