@@ -54,6 +54,7 @@
             <br>
             <label for="checkboxFilter">
                 Number of Members:
+                <br>
                 <input type="checkbox" id="checkboxFilter1" name="checkboxFilter1"> 1
                 <input type="checkbox" id="checkboxFilter2" name="checkboxFilter2"> 2
                 <input type="checkbox" id="checkboxFilter3" name="checkboxFilter3"> 3
@@ -63,51 +64,22 @@
                 <input type="checkbox" id="checkboxFilter7" name="checkboxFilter7"> 7
             </label>
             <br>
-            <!-- <label for="checkboxFilter">
+            <label for="checkboxFilter">
                 Number of Locations:
-                <input type="text" name="search" class="size" autocomplete="off" placeholder="Search..." list="data1">
-                <datalist id = "data1">
+                <input type="text" name="search" class="size" autocomplete="off" placeholder="Search..." list="data2">
+                <datalist id = "data2">
                   {{range .}}
-                  {{$name := .Name}}
                   {{range .Locations}}
-                  <option value="{{$name}}">{{.}} - location</option>
+                  <option value="{{.}}">{{.}} - location</option>
                   {{end}}
                   {{end}}
                 </datalist>
-            </label> -->
+            </label>
             <br>
             <button type="submit">Apply Filters</button>
             <button type="button" onclick="clearFilters()">Clear Filters</button>
         </form>
       </div>
-  
-      <script>
-        function updateRangeValue(inputId, valueId) {
-          var rangeFilterInput = document.getElementById(inputId);
-          var rangeValueSpan = document.getElementById(valueId);
-          rangeFilterInput.addEventListener("input", function() {
-            rangeValueSpan.textContent = rangeFilterInput.value;
-          });
-        }
-        updateRangeValue("rangeFilter", "rangeValue")
-        updateRangeValue("creationDateFilter", "creationDateValue");
-        updateRangeValue("firstAlbumDateFilter", "firstAlbumDateValue");
-        updateRangeValue("otherDateFilter", "otherDateValue");
-      </script>
-      <script>
-        function clearFilters() {
-          // Get the form element
-          var form = document.getElementById("filterForm");
-          // Reset all form fields to their default values
-          form.reset();
-          // Update range value spans to reflect the default values
-          document.getElementById("rangeValue").textContent = "1900";
-          document.getElementById("creationDateValue").textContent = "2024";
-          document.getElementById("firstAlbumDateValue").textContent = "1900";
-          document.getElementById("otherDateValue").textContent = "2024";
-          // You may also want to clear any additional filters or selections here
-        }
-        </script>
 
     <main>
         <section id="artistList" class="artist-card">
@@ -126,3 +98,39 @@
     </footer>
 </body>
 </html>
+
+<script>
+    function updateRangeValue(inputId, valueId) {
+      var rangeFilterInput = document.getElementById(inputId);
+      var rangeValueSpan = document.getElementById(valueId);
+      rangeFilterInput.addEventListener("input", function() {
+        rangeValueSpan.textContent = rangeFilterInput.value;
+      });
+    }
+    updateRangeValue("rangeFilter", "rangeValue")
+    updateRangeValue("creationDateFilter", "creationDateValue");
+    updateRangeValue("firstAlbumDateFilter", "firstAlbumDateValue");
+    updateRangeValue("otherDateFilter", "otherDateValue");
+  </script>
+  <script>
+    function clearFilters() {
+      // Get the form element
+      var form = document.getElementById("filterForm");
+      // Reset all form fields to their default values
+      form.reset();
+      // Update range value spans to reflect the default values
+      document.getElementById("rangeValue").textContent = "1900";
+      document.getElementById("creationDateValue").textContent = "2024";
+      document.getElementById("firstAlbumDateValue").textContent = "1900";
+      document.getElementById("otherDateValue").textContent = "2024";
+      // You may also want to clear any additional filters or selections here
+    }
+    function toggleNavbar() {
+          var navbar = document.getElementById("navbar");
+          if (navbar.style.transform === "translateX(0px)") {
+              navbar.style.transform = "translateX(-250px)";
+          } else {
+              navbar.style.transform = "translateX(0px)";
+          }
+      }
+  </script>

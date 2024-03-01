@@ -82,3 +82,28 @@ h1 {
     outline: none;
   }
   
+
+  /* .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 213.7px;
+    height: calc(100% - 40px); /* Adjusted height to leave space for icon 
+    background-color: #333;
+    padding: 20px;
+    padding-top: 60px; /* Adjusted top padding to move content below icon 
+    color: #fff;
+    overflow-y: auto;
+    transform: translateX(-250px); /* Initially hide the navbar 
+    transition: transform 0.3s ease-in-out; /* Add smooth transition effect 
+    z-index: 1; /* Ensure the navbar is above other elements 
+  } */
+  /* Style for the navbar icon */
+  /* .navbar-icon {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    z-index: 999; /* Ensure the icon is above other elements 
+}*/
+  

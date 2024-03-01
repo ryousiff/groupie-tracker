@@ -28,6 +28,7 @@ func WebServer() {
 		homeHandler(w, r, templates)
 	})
 	http.HandleFunc("/search", searchHandler)
+	http.HandleFunc("/filter", Filter)
 
 	// Start the HTTP server
 	fmt.Println("Server started on http://localhost:8800")
