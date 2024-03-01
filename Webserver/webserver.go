@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"os"
 )
 
 func WebServer() {
@@ -19,6 +20,7 @@ func WebServer() {
 	// Serve static files
 	http.Handle("/groupie.css", http.FileServer(http.Dir("../Webserver")))
 	http.Handle("/info.css", http.FileServer(http.Dir("../Webserver")))
+	// http.HandleFunc("/filter", filter)
 
 	// Define routes and handlers
 	http.HandleFunc("/info", infoHandler)
@@ -33,12 +35,17 @@ func WebServer() {
 	if err != nil {
 		fmt.Println("Failed to start server:", err)
 	}
+	allData = returnArtists()
+	if allData == nil {
+		fmt.Println("Failed to gather Data from API")
+		os.Exit(1)
+	}
 }
 
 
 func homeHandler(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	if r.URL.Path == "/" {
-		artists := PrintArtist()
+		artists := returnArtists()
 		if artists == nil {
 			// Error 500: Internal Server Error
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -89,7 +96,7 @@ func infoHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
-	artists := PrintArtist()
+	artists := returnArtists()
 	if artists == nil {
 		// Error 500: Internal Server Error
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

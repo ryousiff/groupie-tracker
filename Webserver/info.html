@@ -14,9 +14,27 @@
         <p><b>Creation Date:</b> {{.CreationDate}}</p>
         <p><b>First Album:</b> {{.FirstAlbum}}</p>
         <p><b>Members:</b><br> {{range .Members}}{{.}}<br> {{end}}</p>
-        <p><b>Concert Dates:</b><br> {{.ConcertDates}}</p>
-        <p><b>Locations:</b><br> {{.Locations}}</p>
-        <p><b>Relations:</b><br> {{.Relations}}</p>        
+
+        <p> <b> ConcertDates:</b> {{range .ConcertDates}}
+            <option value="{{.}}">{{.}}</option>
+            {{end}}
+        </p>
+
+       <p> <b> Locations:</b> {{range .Locations}}
+                    <option value="{{.}}">{{.}}</option>
+                    {{end}}
+                </p>
+                
+                <p><b>Relations:</b><br>
+                
+                {{range $key, $value := .Concerts}}
+                {{$key}}
+                    <ul>{{range $value}}
+                         {{.}}
+                        {{end}}
+                    </ul>
+                {{end}}  
+        </p>   
     </div>    
 </body>
 </html>
