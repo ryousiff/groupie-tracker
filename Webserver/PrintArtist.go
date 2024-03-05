@@ -12,18 +12,18 @@ package groupie
 // )
 
 type Artist struct {
-	Name         		string   			`json:"name"`
-	Image        		string   			`json:"image"`
-	Id           		int      			`json:"id"`
-	CreationDate 		int      			`json:"creationDate"`
-	FirstAlbum   		string   			`json:"firstAlbum"`
-	Members      		[]string 			`json:"members"`
-	ConcertsDatesLink 	string   			`json:"concertDates"`
-	LocationsLink    	string 				`json:"locations"` // Modify here
-	Relation   			string   			`json:"relations"`
+	Name              string              `json:"name"`
+	Image             string              `json:"image"`
+	Id                int                 `json:"id"`
+	CreationDate      int                 `json:"creationDate"`
+	FirstAlbum        string              `json:"firstAlbum"`
+	Members           []string            `json:"members"`
+	ConcertsDatesLink string              `json:"concertDates"`
+	LocationsLink     string              `json:"locations"` // Modify here
+	Relation          string              `json:"relations"`
 	Concerts          map[string][]string `json:"datesLocations"`
-	Locations 			[]string
-	ConcertDates		[]string
+	Locations         []string
+	ConcertDates      []string
 }
 
 type dates struct {
@@ -32,7 +32,7 @@ type dates struct {
 }
 
 type location struct {
-	ID  int    `json:"id"`
+	ID        int      `json:"id"`
 	Locations []string `json:"locations"`
 }
 
@@ -42,6 +42,10 @@ type relation struct {
 }
 
 var allData []Artist
+
+func SetData(data []Artist) {
+	allData = data
+}
 
 // func PrintArtist() []Artist {
 // 	response, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
@@ -84,5 +88,3 @@ var allData []Artist
 // 	artist.Relations = formatRelations(relations)
 // }
 // // ...
-
-

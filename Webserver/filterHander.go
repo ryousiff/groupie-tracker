@@ -1,12 +1,13 @@
 package groupie
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
 	"text/template"
-	"log"
 )
+
 func Filter(w http.ResponseWriter, r *http.Request) {
 	temp, err := template.ParseFiles("../Webserver/groupie.html")
 	if err != nil {
@@ -38,7 +39,7 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-	//if statement for creation date
+	// if statement for creation date
 	if creationFromDate > creationToDate {
 		creationFromDate, creationToDate = creationToDate, creationFromDate
 	} else if creationFromDate == creationToDate {
@@ -47,7 +48,7 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 		creationFromDate = strconv.Itoa(fromDate)
 		creationToDate = strconv.Itoa(toDate)
 	}
-	//if statement for first album date
+	// if statement for first album date
 	if firstAlbumFromDate > firstAlbumToDate {
 		firstAlbumFromDate, firstAlbumToDate = firstAlbumToDate, firstAlbumFromDate
 	} else if firstAlbumFromDate == firstAlbumToDate {
@@ -56,13 +57,16 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 		firstAlbumFromDate = strconv.Itoa(fromAlbum)
 		firstAlbumToDate = strconv.Itoa(toAlbum)
 	}
-	for _, v := range allData {
+
+	newdata := allData
+	for _, v := range newdata {
 		if handleCreation(creationFromDate, creationToDate, v.CreationDate) && handleAlbum(firstAlbumFromDate, firstAlbumToDate, v.FirstAlbum) && handleMembers(len(v.Members), members) && ContainsLocation(v.Locations, query) {
 			result = append(result, v)
 		}
 	}
 	temp.Execute(w, result)
 }
+
 func handleCreation(creationFromDate string, creationToDate string, artistCreation int) bool {
 	creationFrom, err := strconv.Atoi(creationFromDate)
 	if err != nil {
@@ -74,14 +78,16 @@ func handleCreation(creationFromDate string, creationToDate string, artistCreati
 	}
 	return false
 }
+
 func handleAlbum(firstAlbumFromDate string, firstAlbumToDate string, artistAlbum string) bool {
-	//take the year from artistalbum which contains aa date format i want the year only use the time package
+	// take the year from artistalbum which contains aa date format i want the year only use the time package
 	parts := strings.Split(artistAlbum, "-")
 	if (firstAlbumFromDate <= parts[2]) && (parts[2] <= firstAlbumToDate) {
 		return true
 	}
 	return false
 }
+
 func handleMembers(artistMembers int, memberFilter []string) bool {
 	allfalse := true
 	for i, checkbox := range memberFilter {
