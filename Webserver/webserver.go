@@ -1,27 +1,23 @@
 // Webserver/webserver.go
 package groupie
-
 import (
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
-	"strconv"
 	"os"
+	"strconv"
 )
-
 func WebServer() {
 	// Load templates
 	templates, err := LoadTemplates()
 	if err != nil {
 		log.Fatal("Error loading templates:", err)
 	}
-
 	// Serve static files
 	http.Handle("/groupie.css", http.FileServer(http.Dir("../Webserver")))
 	http.Handle("/info.css", http.FileServer(http.Dir("../Webserver")))
 	// http.HandleFunc("/filter", filter)
-
 	// Define routes and handlers
 	http.HandleFunc("/info", infoHandler)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -29,24 +25,22 @@ func WebServer() {
 	})
 	http.HandleFunc("/search", searchHandler)
 	http.HandleFunc("/filter", Filter)
-
+	allData = returnArtists()
+	SetData(allData)
 	// Start the HTTP server
 	fmt.Println("Server started on http://localhost:8800")
 	err = http.ListenAndServe(":8800", nil)
 	if err != nil {
 		fmt.Println("Failed to start server:", err)
 	}
-	allData = returnArtists()
 	if allData == nil {
 		fmt.Println("Failed to gather Data from API")
 		os.Exit(1)
 	}
 }
-
-
 func homeHandler(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	if r.URL.Path == "/" {
-		artists := returnArtists()
+		artists := allData
 		if artists == nil {
 			// Error 500: Internal Server Error
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -59,14 +53,13 @@ func homeHandler(w http.ResponseWriter, r *http.Request, tmpl *template.Template
 		return
 	}
 }
-
 func renderTemplate(w http.ResponseWriter, tmpl *template.Template, artists []Artist) {
-    err := tmpl.Execute(w, artists)
-    if err != nil {
-        log.Println("Error executing template:", err)
-        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-        return
-    }
+	err := tmpl.Execute(w, artists)
+	if err != nil {
+		log.Println("Error executing template:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 }
 func renderInfoTemplate(w http.ResponseWriter, artist Artist) {
 	tmpl, err := template.ParseFiles("../Webserver/info.html")
@@ -84,7 +77,6 @@ func renderInfoTemplate(w http.ResponseWriter, artist Artist) {
 		return
 	}
 }
-
 func infoHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	if id == "" {
@@ -97,7 +89,7 @@ func infoHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
-	artists := returnArtists()
+	artists := allData
 	if artists == nil {
 		// Error 500: Internal Server Error
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -117,4 +109,3 @@ func infoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	renderInfoTemplate(w, selectedArtist)
 }
-
