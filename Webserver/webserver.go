@@ -1,5 +1,6 @@
 // Webserver/webserver.go
 package groupie
+
 import (
 	"fmt"
 	"html/template"
@@ -8,6 +9,7 @@ import (
 	"os"
 	"strconv"
 )
+
 func WebServer() {
 	// Load templates
 	templates, err := LoadTemplates()
@@ -17,6 +19,8 @@ func WebServer() {
 	// Serve static files
 	http.Handle("/groupie.css", http.FileServer(http.Dir("../Webserver")))
 	http.Handle("/info.css", http.FileServer(http.Dir("../Webserver")))
+	http.Handle("/error.css", http.FileServer(http.Dir("../Webserver")))
+
 	// http.HandleFunc("/filter", filter)
 	// Define routes and handlers
 	http.HandleFunc("/info", infoHandler)

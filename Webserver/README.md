@@ -13,7 +13,9 @@ Installation:
 
 Clone the repository to your local machine
 Navigate to the project directory: cd GroupieTracker
-Run the web server: go run cmd/main.go
+Run the web server: 
+cd cmd
+go run .
 Usage:
 
 Access the application by navigating to http://localhost:8800 in your web browser.

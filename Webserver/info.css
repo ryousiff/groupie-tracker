@@ -32,3 +32,12 @@ p {
 .art p {
     margin-left: 20px;
 }
+
+.infoName {
+    transition: transform 0.3s ease;
+    text-decoration: none;
+}
+
+.infoName:hover h2 {
+    transform: scale(1.1); /* Scale up by 10% */
+}
