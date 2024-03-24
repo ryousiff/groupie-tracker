@@ -1,68 +1,91 @@
 package groupie
 import (
-	"log"
+	// "log"
 	"net/http"
 	"strconv"
 	"strings"
 	"text/template"
 )
 func Filter(w http.ResponseWriter, r *http.Request) {
-	temp, err := template.ParseFiles("../Webserver/groupie.html")
-	if err != nil {
-		log.Println("Error parsing template:", err)
-		// Error 500: Internal Server Error
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-	result := []Artist{}
-	query := strings.ToLower(r.FormValue("search"))
-	creationFromDate := r.FormValue("rangeFilter")
-	creationToDate := r.FormValue("creationDateFilter")
-	firstAlbumFromDate := r.FormValue("firstAlbumDateFilter")
-	firstAlbumToDate := r.FormValue("otherDateFilter")
-	// Assuming checkboxFilter represents the checkboxes for number of members
-	members := []string{
-		r.FormValue("checkboxFilter1"),
-		r.FormValue("checkboxFilter2"),
-		r.FormValue("checkboxFilter3"),
-		r.FormValue("checkboxFilter4"),
-		r.FormValue("checkboxFilter5"),
-		r.FormValue("checkboxFilter6"),
-		r.FormValue("checkboxFilter7"),
-	}
-	fromDate, err := strconv.Atoi(creationFromDate)
-	toDate, err := strconv.Atoi(creationToDate)
-	fromAlbum, err := strconv.Atoi(firstAlbumFromDate)
-	toAlbum, err := strconv.Atoi(firstAlbumToDate)
-	if err != nil {
-		return
-	}
-	// if statement for creation date
-	if creationFromDate > creationToDate {
-		creationFromDate, creationToDate = creationToDate, creationFromDate
-	} else if creationFromDate == creationToDate {
-		fromDate -= 1
-		toDate += 1
-		creationFromDate = strconv.Itoa(fromDate)
-		creationToDate = strconv.Itoa(toDate)
-	}
-	// if statement for first album date
-	if firstAlbumFromDate > firstAlbumToDate {
-		firstAlbumFromDate, firstAlbumToDate = firstAlbumToDate, firstAlbumFromDate
-	} else if firstAlbumFromDate == firstAlbumToDate {
-		fromAlbum -= 1
-		toAlbum += 1
-		firstAlbumFromDate = strconv.Itoa(fromAlbum)
-		firstAlbumToDate = strconv.Itoa(toAlbum)
-	}
-	newdata := allData
-	for _, v := range newdata {
-		if handleCreation(creationFromDate, creationToDate, v.CreationDate) && handleAlbum(firstAlbumFromDate, firstAlbumToDate, v.FirstAlbum) && handleMembers(len(v.Members), members) && ContainsLocation(v.Locations, query) {
-			result = append(result, v)
-		}
-	}
-	temp.Execute(w, result)
+    // Parse template
+    temp, err := template.ParseFiles("../Webserver/groupie.html")
+    if err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+        http.ServeFile(w, r, "../Webserver/error.html")
+        return
+    }
+
+    // Extract filter parameters from request
+    creationFromDate := r.FormValue("rangeFilter")
+    creationToDate := r.FormValue("creationDateFilter")
+    firstAlbumFromDate := r.FormValue("firstAlbumDateFilter")
+    firstAlbumToDate := r.FormValue("otherDateFilter")
+
+    // Adjust filter parameters if necessary
+    fromDate, _ := strconv.Atoi(creationFromDate)
+    toDate, _ := strconv.Atoi(creationToDate)
+    fromAlbum, _ := strconv.Atoi(firstAlbumFromDate)
+    toAlbum, _ := strconv.Atoi(firstAlbumToDate)
+
+    // Swap dates if toDate is greater than fromDate
+    if toDate < fromDate {
+        creationFromDate, creationToDate = creationToDate, creationFromDate
+        fromDate, toDate = toDate, fromDate
+    }
+
+    // Swap album dates if toAlbum is greater than fromAlbum
+    if toAlbum < fromAlbum {
+        firstAlbumFromDate, firstAlbumToDate = firstAlbumToDate, firstAlbumFromDate
+        fromAlbum, toAlbum = toAlbum, fromAlbum
+    }
+
+    // Update filter parameters with adjusted values
+    creationFromDate = strconv.Itoa(fromDate)
+    creationToDate = strconv.Itoa(toDate)
+    firstAlbumFromDate = strconv.Itoa(fromAlbum)
+    firstAlbumToDate = strconv.Itoa(toAlbum)
+
+    // Handle missing or invalid filter parameters
+    if creationFromDate == "" || creationToDate == "" || firstAlbumFromDate == "" || firstAlbumToDate == "" {
+        w.WriteHeader(http.StatusNotFound)
+        http.ServeFile(w, r, "../Webserver/error.html")
+        return
+    }
+
+    // Assuming checkboxFilter represents the checkboxes for number of members
+    members := []string{
+        r.FormValue("checkboxFilter1"),
+        r.FormValue("checkboxFilter2"),
+        r.FormValue("checkboxFilter3"),
+        r.FormValue("checkboxFilter4"),
+        r.FormValue("checkboxFilter5"),
+        r.FormValue("checkboxFilter6"),
+        r.FormValue("checkboxFilter7"),
+    }
+
+    // Perform filtering based on filter parameters
+    result := []Artist{}
+    query := strings.ToLower(r.FormValue("search"))
+    newdata := allData
+    for _, v := range newdata {
+        if handleCreation(creationFromDate, creationToDate, v.CreationDate) && handleAlbum(firstAlbumFromDate, firstAlbumToDate, v.FirstAlbum) && handleMembers(len(v.Members), members) && ContainsLocation(v.Locations, query) {
+            result = append(result, v)
+        }
+    }
+
+    // Serve error page if no results found
+    if len(result) == 0 {
+        w.WriteHeader(http.StatusNotFound)
+        http.ServeFile(w, r, "../Webserver/error.html")
+        return
+    }
+
+    // Execute template with filtered results
+    temp.Execute(w, result)
 }
+
+
+
 func handleCreation(creationFromDate string, creationToDate string, artistCreation int) bool {
 	creationFrom, err := strconv.Atoi(creationFromDate)
 	if err != nil {

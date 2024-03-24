@@ -107,3 +107,11 @@ h1 {
     z-index: 999; /* Ensure the icon is above other elements */
 }
   
+.pp {
+    transition: transform 0.3s ease;
+    text-decoration: none;
+}
+
+.pp:hover h1 {
+    transform: scale(1.03); /* Scale up by 10% */
+}

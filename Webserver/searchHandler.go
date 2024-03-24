@@ -12,14 +12,18 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query().Get("search")
 	if query == "" {
 		// Error 400: Bad Request
-		http.Error(w, "Bad Request", http.StatusBadRequest)
+		// http.Error(w, "Bad Request", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		http.ServeFile(w, r, "../Webserver/error.html")
 		return
 	}
 
 	artists := GatherDataUp("https://groupietrackers.herokuapp.com/api/artists")
 	if artists == nil {
 		// Error 500: Internal Server Error
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		http.ServeFile(w, r, "../Webserver/error.html")
 		return
 	}
 
@@ -55,7 +59,9 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 
 	if len(selectedArtists) == 0 {
 		// Error 404: Not Found
-		http.Error(w, "Not Found", http.StatusNotFound)
+		// http.Error(w, "Not Found", http.StatusNotFound)
+		w.WriteHeader(http.StatusNotFound)
+		http.ServeFile(w, r, "../Webserver/error.html")
 		return
 	}
 
@@ -63,5 +69,5 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal("Error loading templates:", err)
 	}
-	renderTemplate(w, tmpl, selectedArtists)
+	renderTemplate(w, r, tmpl, selectedArtists)
 }
