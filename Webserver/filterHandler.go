@@ -11,7 +11,7 @@ func Filter(w http.ResponseWriter, r *http.Request) {
     temp, err := template.ParseFiles("../Webserver/groupie.html")
     if err != nil {
         w.WriteHeader(http.StatusInternalServerError)
-        http.ServeFile(w, r, "../Webserver/error.html")
+        http.ServeFile(w, r, "../Webserver/error500.html")
         return
     }
 
@@ -48,7 +48,7 @@ func Filter(w http.ResponseWriter, r *http.Request) {
     // Handle missing or invalid filter parameters
     if creationFromDate == "" || creationToDate == "" || firstAlbumFromDate == "" || firstAlbumToDate == "" {
         w.WriteHeader(http.StatusNotFound)
-        http.ServeFile(w, r, "../Webserver/error.html")
+        http.ServeFile(w, r, "../Webserver/error404.html")
         return
     }
 
@@ -76,7 +76,7 @@ func Filter(w http.ResponseWriter, r *http.Request) {
     // Serve error page if no results found
     if len(result) == 0 {
         w.WriteHeader(http.StatusNotFound)
-        http.ServeFile(w, r, "../Webserver/error.html")
+        http.ServeFile(w, r, "../Webserver/error404.html")
         return
     }
 

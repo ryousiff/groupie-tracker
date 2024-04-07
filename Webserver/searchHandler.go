@@ -14,7 +14,7 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 		// Error 400: Bad Request
 		// http.Error(w, "Bad Request", http.StatusBadRequest)
 		w.WriteHeader(http.StatusBadRequest)
-		http.ServeFile(w, r, "../Webserver/error.html")
+		http.ServeFile(w, r, "../Webserver/error400.html")
 		return
 	}
 
@@ -23,7 +23,7 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 		// Error 500: Internal Server Error
 		// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		w.WriteHeader(http.StatusInternalServerError)
-		http.ServeFile(w, r, "../Webserver/error.html")
+		http.ServeFile(w, r, "../Webserver/error500.html")
 		return
 	}
 
@@ -61,7 +61,7 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 		// Error 404: Not Found
 		// http.Error(w, "Not Found", http.StatusNotFound)
 		w.WriteHeader(http.StatusNotFound)
-		http.ServeFile(w, r, "../Webserver/error.html")
+		http.ServeFile(w, r, "../Webserver/error404.html")
 		return
 	}
 

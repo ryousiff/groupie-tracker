@@ -49,14 +49,14 @@ func homeHandler(w http.ResponseWriter, r *http.Request, tmpl *template.Template
 			// Error 500: Internal Server Error
 			// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			w.WriteHeader(http.StatusInternalServerError)
-			http.ServeFile(w, r, "../Webserver/error.html")
+			http.ServeFile(w, r, "../Webserver/error500.html")
 			return
 		}
 		renderTemplate(w, r, tmpl, artists)
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 		// w.Write([]byte("Not Found"))
-		http.ServeFile(w, r, "../Webserver/error.html")
+		http.ServeFile(w, r, "../Webserver/error404.html")
 		return
 	}
 }
@@ -66,7 +66,7 @@ func renderTemplate(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 		// log.Println("Error executing template:", err)
 		// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		w.WriteHeader(http.StatusInternalServerError)
-		http.ServeFile(w, r, "../Webserver/error.html")
+		http.ServeFile(w, r, "../Webserver/error500.html")
 		return
 	}
 }
@@ -77,7 +77,7 @@ func renderInfoTemplate(w http.ResponseWriter, r *http.Request, artist Artist) {
 		// // Error 500: Internal Server Error
 		// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		w.WriteHeader(http.StatusInternalServerError)
-		http.ServeFile(w, r, "../Webserver/error.html")
+		http.ServeFile(w, r, "../Webserver/error500.html")
 		return
 	}
 	err = tmpl.Execute(w, artist)
@@ -86,7 +86,7 @@ func renderInfoTemplate(w http.ResponseWriter, r *http.Request, artist Artist) {
 		// // Error 500: Internal Server Error
 		// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		w.WriteHeader(http.StatusInternalServerError)
-		http.ServeFile(w, r, "../Webserver/error.html")
+		http.ServeFile(w, r, "../Webserver/error500.html")
 		return
 	}
 }
@@ -95,7 +95,7 @@ func infoHandler(w http.ResponseWriter, r *http.Request) {
 	if id == "" {
 		// http.Error(w, "Bad Request", http.StatusNotFound)
 		w.WriteHeader(http.StatusNotFound)
-		http.ServeFile(w, r, "../Webserver/error.html")
+		http.ServeFile(w, r, "../Webserver/error404.html")
 		return
 	}
 	artistID, err := strconv.Atoi(id)
@@ -103,7 +103,7 @@ func infoHandler(w http.ResponseWriter, r *http.Request) {
 		// Error 400: Bad Request
 		// http.Error(w, "Bad Request", http.StatusBadRequest)
 		w.WriteHeader(http.StatusBadRequest)
-		http.ServeFile(w, r, "../Webserver/error.html")
+		http.ServeFile(w, r, "../Webserver/error400.html")
 		return
 	}
 	artists := allData
@@ -111,7 +111,7 @@ func infoHandler(w http.ResponseWriter, r *http.Request) {
 		// Error 500: Internal Server Error
 		// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		w.WriteHeader(http.StatusInternalServerError)
-		http.ServeFile(w, r, "../Webserver/error.html")
+		http.ServeFile(w, r, "../Webserver/error500.html")
 		return
 	}
 	var selectedArtist Artist
@@ -125,7 +125,7 @@ func infoHandler(w http.ResponseWriter, r *http.Request) {
 		// Error 404: Not Found
 		// http.Error(w, "Not Found", http.StatusNotFound)
 		w.WriteHeader(http.StatusNotFound)
-		http.ServeFile(w, r, "../Webserver/error.html")
+		http.ServeFile(w, r, "../Webserver/error404.html")
 		return
 	}
 	renderInfoTemplate(w, r, selectedArtist)
